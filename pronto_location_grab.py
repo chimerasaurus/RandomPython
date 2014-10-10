@@ -22,10 +22,11 @@ json_location_data = json.loads(http_response.text)
 # Output the data
 if json_location_data and 'stations' in json_location_data and json_location_data['stations'][0]:
     # Print the headers
-    header = json_location_data['stations'][0].keys()
-    print(DELIMITER.join(map(str, header)))
+    print(DELIMITER.join(map(str, sorted(json_location_data['stations'][0].keys()))))
 
     # Print the station data
     for station in json_location_data['stations']:
-        station_data = station.values()
-        print(DELIMITER.join(map(str, station_data)))
+        keys = station.keys()
+        keys.sort()
+        sorted_station = map(station.get, keys)
+        print(DELIMITER.join(map(str, sorted_station)))
