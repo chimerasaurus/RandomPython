@@ -1,7 +1,7 @@
 '''
-This script completes an analysis of the Seattle Pronto cycling network.
-Specifically, it will compare all stations in the network to examine their distance
-from one another to calculate cost, usage, distance, and other metrics.
+This script grabs location data for the Seattle Pronto bicycle network.
+Specifically, this script will use the Google Directions API to calculate routes
+between every station.
 
 v1.2014-10-09
 '''
