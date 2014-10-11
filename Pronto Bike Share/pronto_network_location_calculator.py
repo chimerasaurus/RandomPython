@@ -18,7 +18,7 @@ import time
 
 # Static variables
 DATAFILE_DELIMITER = '\t'
-GOOGLE_MAPS_DIRECTIONS_API_KEY = ''
+GOOGLE_MAPS_DIRECTIONS_API_KEY = '' # Google how to get one of these - it's free
 MAPS_LOOKUP_DELAY = 2 # sec
 
 # Get location data
@@ -29,7 +29,7 @@ location_data.pop(0)
 for location in location_data:
     location_items = location.split(DATAFILE_DELIMITER)
     if len(location_items) > 1 and location_items[8] != "0.0":
-        location_dict[location_items[7]] = {'name': location_items[11], 'lat': location_items[8], 'long':
+        location_dict[location_items[7]] = {'name': location_items[12], 'lat': location_items[8], 'long':
             location_items[9], 'routes_to': {}}
 
 # Determine number of possible routes
