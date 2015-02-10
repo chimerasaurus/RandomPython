@@ -11,7 +11,7 @@ __author__ = 'James Malone'
 __license__ = "MIT"
 __version__ = "0.2"
 __maintainer__ = "James Malone"
-__email__ = "jamalone at gmail dot com"
+__email__ = 'jamalone at gmail dot com'
 __status__ = "Development"
 
 # Packages needed for this module
@@ -20,6 +20,7 @@ import re
 import requests
 
 class WsLocation:
+    """Represents a location helf in the Walkscore website."""
     def __init__(self, *init_data, **kwargs):
         for dictionary in init_data:
             for key in dictionary:
@@ -27,15 +28,15 @@ class WsLocation:
         for key in kwargs:
             setattr(self, key, kwargs[key])
 
+
 class City(WsLocation):
-    """
-    Represents a city from the Walkscore website
-    """
+    """Represents a city from the Walkscore website."""
     def __init__(self, *init_data, **kwargs):
         WsLocation.__init__(self, *init_data, **kwargs)
 
     @property
     def neighborhoods(self):
+        """Get a list of neighborhoods for the city."""
         nh_list = []
         for nh in self._neighborhoods:
             nh['city'] = self.name
@@ -46,24 +47,18 @@ class City(WsLocation):
 
     @neighborhoods.setter
     def neighborhoods(self, value):
+        """Set the list of neighborhoods for the city."""
         self._neighborhoods = value
 
+
 class Neighborhood(WsLocation):
-    """
-    Represents a neighborhood from the Walkscore website
-    """
+    """Represents a neighborhood from the Walkscore website."""
     def __init__(self, *init_data, **kwargs):
         WsLocation.__init__(self, *init_data, **kwargs)
 
-    def get_full_data(self):
-        # todo fix this error - missing state
-        self.__init__(self, MovevalueApi.data_for_neighborhood(self.name, self.city, self.state))
-
 
 class MovevalueApi:
-    """
-    Class to interact with the Walkscore website
-    """
+    """Class to interact with the Walkscore website."""
     base_city_url = 'https://www.walkscore.com/%s/%s'
     base_neighborhood_url = 'https://www.walkscore.com/%s/%s/%s'
     regex_filters = {
@@ -85,7 +80,9 @@ class MovevalueApi:
             },
     }
 
+
     def data_for_neighborhood(self, name, city, state):
+        """Get the Walkscore data for the given neighborhood."""
         nh_url = self.walkscore_neighborhood_url(name, city, state)
         ws_data = self.get_page_data(nh_url)
         nh_data = self.parse_data_points(ws_data)
@@ -96,7 +93,9 @@ class MovevalueApi:
 
         return new_neighborhood
 
+
     def data_for_city(self, name, state):
+        """Get the Walkscore data for the given city."""
         city_url = self.walkscore_city_url(name, state)
         ws_data = self.get_page_data(city_url)
         city_data = self.parse_data_points(ws_data)
@@ -106,7 +105,9 @@ class MovevalueApi:
 
         return newCity
 
+
     def parse_data_points(self, html):
+        """Parse the page data and look for expected contents based on regular expressions."""
         parsed_data = {}
         for data_type in MovevalueApi.regex_filters.keys():
             if data_type == 'int':
@@ -125,12 +126,14 @@ class MovevalueApi:
 
 
     def get_page_data(self, url):
+        """Get the page data from the Walkscore website."""
         r = requests.get(url)
         page_data = str(r.content)
         return page_data
 
 
     def regex_page_data_int(self, pattern, html):
+        """Extract an integer value from the page based on a pattern."""
         result = self.regex_page_data(pattern, html)
         if result is not None:
             if ',' in result:
@@ -140,6 +143,7 @@ class MovevalueApi:
 
 
     def regex_page_data_float(self, pattern, html):
+        """Extract a floating point value from the page based on a pattern."""
         result = self.regex_page_data(pattern, html)
         if result is not None:
             if ',' in result:
@@ -147,7 +151,9 @@ class MovevalueApi:
             result = float(result)
         return result
 
+
     def regex_page_data_table(self, pattern, html):
+        """Extract data from a table on the page based on an id and value."""
         soup = BeautifulSoup(html)
         attributes = pattern.split('=')
         table_data = []
@@ -173,6 +179,7 @@ class MovevalueApi:
 
 
     def regex_page_data(self, pattern, html):
+        """Get a value from page data based on a regex pattern. """
         result = re.search(pattern, html)
         if result is not None:
             return result.group(1)
@@ -181,13 +188,10 @@ class MovevalueApi:
 
 
     def walkscore_city_url(self, city, state):
-        """
-        Return a well-formatted Walkscore URL
-        """
+        """Return a well-formatted Walkscore URL for cities."""
         return MovevalueApi.base_city_url % (state, city.replace(' ', '_'))
 
+
     def walkscore_neighborhood_url(self, name, city, state):
-        """
-        Return a well-formatted Walkscore URL
-        """
+        """Return a well-formatted Walkscore URL for neighborhoods."""
         return MovevalueApi.base_neighborhood_url % (state, city.replace(' ', '_'), name.replace(' ', '_'))
