@@ -1,6 +1,6 @@
 """
-This scripy scrapes data from the Walkscore website. This may be useful since their API has
-limits and getting a key can be annoyingly difficult. Please use this responsibily.
+This script scrapes data from the Walkscore website. This may be useful since their API has
+limits and getting a key can be annoyingly difficult. Please use this responsibly.
 
 This script consumes an input file in CSV format with the following format:
 

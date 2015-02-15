@@ -38,3 +38,12 @@ CREATE TABLE Status(
 	Updated INT NOT NULL,
 	FOREIGN KEY(Station) REFERENCES Station(id));
 CREATE INDEX IDX_Status ON Status(Available_Bikes, Unavailable_Bikes);
+
+-- Create update table
+DROP TABLE IF EXISTS Update;
+CREATE TABLE Update(
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	start_time INT NOT NULL,
+	end_time INT,
+	outcome_id INT
+);
