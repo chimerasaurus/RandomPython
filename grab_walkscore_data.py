@@ -15,10 +15,8 @@ The STATE code must be the two-letter US code, such as:
 
 # Imports for this script
 import argparse
-import json
 import re
 import requests
-import sys
 import time
 
 # Constant variables
