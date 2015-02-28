@@ -36,7 +36,7 @@ __author__ = "James Malone"
 __copyright__ = "Copyright 2015, James Malone"
 __license__ = "MIT"
 __version__ = "1"
-__maintainer__ = "James Malone
+__maintainer__ = "James Malone"
 __email__ = "jamalone at gmail dot com"
 __status__ = "Production"
 
@@ -119,6 +119,9 @@ def main():
                         logger.info("Missing key '%s' in NH" % key)
                         master_list.append(None)
 
+                # Calculate hood stats and append them
+                master_list = master_list + calculate_hood_statistics(hood, city_hoods)
+
                 master_list = ['None' if v is None else v for v in master_list]
                 all_rows.append(master_list)
             write_to_csv(all_rows, args.output_file)
@@ -168,16 +171,19 @@ def calculate_hood_statistics(hood, city_hoods):
     # Array for results
     statistical_results = []
 
-    # ELEMENTS_FOR_ANALYSIS
+    # Add the number of hoods in range
+    statistical_results.append(len(hood['in_range']))
+
+    # Run full calculations
     for element in ELEMENTS_FOR_ANALYSIS:
         element_score = [int(hood[element] or 0)]
         for nearby_hood in hood['in_range']:
             related_hood = next((item for item in city_hoods if item["name"] == nearby_hood))
             element_score.append(int(related_hood[element] or 0))
-            statistical_results.append(np.mean(element_score))
-            statistical_results.append(max(element_score))
-            statistical_results.append(min(element_score))
-            statistical_results.append(np.std(element_score))
+        statistical_results.append(np.mean(element_score))
+        statistical_results.append(max(element_score))
+        statistical_results.append(min(element_score))
+        statistical_results.append(np.std(element_score))
 
     return statistical_results
 
