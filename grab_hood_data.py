@@ -28,7 +28,6 @@ import numpy as np
 import time
 
 # Walkscore api imports (github.com/evilsoapbox/WalkscoreApi)
-sys.path.append('/Users/james/Documents/Projects/WalkscoreApi')
 import geo_utilities
 import walkscoreapi
 
@@ -181,6 +180,8 @@ def calculate_hood_statistics(hood, city_hoods):
         if element in hood:
             try:
                 element_score.append(int(hood[element]))
+            except TypeError:
+                element_score.append(0)
             except KeyError:
                 element_score.append(0)
             except ValueError:
