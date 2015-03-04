@@ -28,6 +28,7 @@ import numpy as np
 import time
 
 # Walkscore api imports (github.com/evilsoapbox/WalkscoreApi)
+sys.path.append('/Users/james/Documents/Projects/WalkscoreApi')
 import geo_utilities
 import walkscoreapi
 
@@ -176,7 +177,16 @@ def calculate_hood_statistics(hood, city_hoods):
 
     # Run full calculations
     for element in ELEMENTS_FOR_ANALYSIS:
-        element_score = [int(hood[element] or 0)]
+        element_score = []
+        if element in hood:
+            try:
+                element_score.append(int(hood[element]))
+            except KeyError:
+                element_score.append(0)
+            except ValueError:
+                element_score.append(0)
+        else:
+            element_score.append(0)
         for nearby_hood in hood['in_range']:
             related_hood = next((item for item in city_hoods if item["name"] == nearby_hood))
             element_score.append(int(related_hood[element] or 0))
